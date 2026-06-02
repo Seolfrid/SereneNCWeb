@@ -448,61 +448,90 @@
       font-size: .7rem; color: var(--muted);
     }
 
-    /* ── MINI PLAYER ────────────────────────────────────────────── */
-    .mini-player {
+    /* ── FLOATING PLAYER ────────────────────────────────────────── */
+    .fp {
       position: fixed; top: calc(var(--nav-h) + 1rem); right: 1.5rem;
-      z-index: 150; width: 272px;
+      z-index: 150; width: 300px;
       background: rgba(12,10,8,.97);
       border: 1px solid var(--border2);
       backdrop-filter: blur(14px);
       box-shadow: 0 8px 32px rgba(0,0,0,.45);
-      transition: opacity .3s;
     }
-    .mini-player.fading { animation: sleep-fade 30s forwards; }
-    @keyframes sleep-fade { 0% { opacity:1; } 100% { opacity:0; } }
-    .mini-header {
+    .fp-fading { animation: fp-fade 30s forwards; }
+    @keyframes fp-fade { 0%{opacity:1} 100%{opacity:0} }
+    .fp-header {
       display: flex; justify-content: space-between; align-items: center;
-      padding: .45rem .75rem;
-      border-bottom: 1px solid var(--border);
+      padding: .45rem .75rem; border-bottom: 1px solid var(--border);
     }
-    .mini-title {
-      font-size: .62rem; letter-spacing: .2em; text-transform: uppercase;
-      color: var(--amber-d); display: flex; align-items: center; gap: .4rem;
+    .fp-album-select {
+      background: none; border: none; color: var(--amber-d);
+      font-size: .62rem; letter-spacing: .15em; text-transform: uppercase;
+      cursor: pointer; font-family: 'Inter', sans-serif;
+      appearance: none; padding-right: .9rem;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4'%3E%3Cpath d='M0 0l3.5 4L7 0z' fill='%238A5E1E'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 0 center;
     }
-    .mini-actions { display: flex; gap: .2rem; align-items: center; }
-    .mini-btn {
+    .fp-album-select option { background: #0C0A08; }
+    .fp-hbtns { display: flex; gap: .1rem; }
+    .fp-btn {
       background: none; border: none; color: var(--muted);
       cursor: pointer; font-size: .85rem; padding: .1rem .35rem;
       transition: color .2s; line-height: 1;
     }
-    .mini-btn:hover { color: var(--text); }
-    .mini-btn.active { color: var(--amber); }
-    #miniBody { display: block; }
-    .mini-player iframe { display: block; width: 100%; height: 42px; border: none; }
-    .sleep-panel {
-      display: none;
-      padding: .55rem .75rem;
-      border-top: 1px solid var(--border);
+    .fp-btn:hover { color: var(--text); }
+    .fp-btn.active { color: var(--amber); }
+    .fp-tracks { list-style: none; }
+    .fp-track {
+      display: grid; grid-template-columns: 1.5rem 1fr auto;
+      align-items: center; gap: .5rem;
+      padding: .5rem .75rem; border-bottom: 1px solid var(--border);
+      cursor: pointer; transition: background .15s;
+    }
+    .fp-track:last-child { border-bottom: none; }
+    .fp-track:hover { background: var(--bg2); }
+    .fp-track.playing { background: rgba(200,146,58,.06); }
+    .fp-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: .75rem; color: var(--amber-d); text-align: right;
+    }
+    .fp-track.playing .fp-num { color: var(--amber); }
+    .fp-info { display: flex; flex-direction: column; gap: .05rem; min-width: 0; }
+    .fp-name {
+      font-size: .78rem; color: var(--text2);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      transition: color .2s;
+    }
+    .fp-track:hover .fp-name, .fp-track.playing .fp-name { color: var(--amber); }
+    .fp-dur { font-size: .62rem; color: var(--muted); }
+    .fp-stars { display: flex; gap: .05rem; flex-shrink: 0; }
+    .fp-star {
+      font-size: .78rem; color: var(--border2);
+      cursor: pointer; transition: color .15s; user-select: none; line-height: 1;
+    }
+    .fp-star.on { color: var(--amber); }
+    .fp-stars:hover .fp-star { color: var(--muted); }
+    .fp-stars .fp-star:hover ~ .fp-star { color: var(--border2); }
+    .fp-stars:hover .fp-star:hover { color: var(--amber-l); }
+    .fp-embed { border-top: 1px solid var(--border); }
+    .fp-embed iframe { display: block; width: 100%; height: 42px; border: none; }
+    .fp-sleep {
+      padding: .5rem .75rem; border-top: 1px solid var(--border);
       background: var(--bg2);
     }
-    .sleep-panel.open { display: block; }
-    .sleep-row { display: flex; gap: .35rem; align-items: center; margin-bottom: .4rem; }
-    .sleep-lbl { font-size: .62rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); flex-shrink: 0; }
-    .sleep-opt {
-      flex: 1; padding: .28rem 0;
-      background: var(--bg3); border: 1px solid var(--border);
-      color: var(--text2); font-size: .68rem; cursor: pointer;
-      transition: background .2s, color .2s; text-align: center;
+    .fp-sleep-row { display: flex; gap: .3rem; align-items: center; }
+    .fp-sleep-lbl { font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); flex-shrink: 0; }
+    .fp-sleep-opt {
+      flex: 1; padding: .28rem 0; background: var(--bg3);
+      border: 1px solid var(--border); color: var(--text2);
+      font-size: .67rem; cursor: pointer; transition: background .15s; text-align: center;
     }
-    .sleep-opt:hover { background: var(--border2); color: var(--text); }
-    .sleep-opt.active { background: var(--amber-d); color: var(--bg); border-color: var(--amber-d); }
-    .sleep-countdown {
-      font-size: .68rem; color: var(--amber-d);
-      font-family: 'Cormorant Garamond', serif; letter-spacing: .08em;
-      display: none;
+    .fp-sleep-opt:hover { background: var(--border2); color: var(--text); }
+    .fp-sleep-opt.active { background: var(--amber-d); color: var(--bg); border-color: var(--amber-d); }
+    .fp-countdown {
+      font-size: .68rem; color: var(--amber-d); margin-top: .35rem;
+      font-family: 'Cormorant Garamond', serif;
     }
-    .sleep-stopped { color: var(--muted); font-style: italic; }
-    @media (max-width: 600px) { .mini-player { display: none; } }
+    @media (max-width: 600px) { .fp { display: none; } }
 
     /* ── RESPONSIVE ─────────────────────────────────────────────── */
     @media (max-width: 768px) {
@@ -525,28 +554,36 @@
 </head>
 <body>
 
-<!-- MINI PLAYER -->
-<div class="mini-player" id="miniPlayer">
-  <div class="mini-header">
-    <span class="mini-title"><span class="pulse"></span> Still Pages</span>
-    <div class="mini-actions">
-      <button class="mini-btn" id="sleepBtn" title="Sleep timer">⏾</button>
-      <button class="mini-btn" id="miniToggle" title="Minimize">−</button>
+<!-- FLOATING PLAYER -->
+<div class="fp" id="floatPlayer">
+  <div class="fp-header">
+    <div style="display:flex;align-items:center;gap:.5rem">
+      <span class="pulse"></span>
+      <select class="fp-album-select" id="fpAlbumSelect">
+        <option value="2980663313">Still Pages · 2025</option>
+      </select>
+    </div>
+    <div class="fp-hbtns">
+      <button class="fp-btn" id="fpSleepBtn" title="Sleep timer">⏾</button>
+      <button class="fp-btn" id="fpToggle">−</button>
     </div>
   </div>
-  <div id="miniBody">
-    <iframe id="miniIframe"
-      src="https://bandcamp.com/EmbeddedPlayer/album=2980663313/size=small/bgcol=0C0A08/linkcol=C8923A/transparent=true/"
-      seamless loading="lazy"></iframe>
-    <div class="sleep-panel" id="sleepPanel">
-      <div class="sleep-row">
-        <span class="sleep-lbl">Sleep</span>
-        <button class="sleep-opt" data-min="15">15m</button>
-        <button class="sleep-opt" data-min="30">30m</button>
-        <button class="sleep-opt" data-min="45">45m</button>
-        <button class="sleep-opt" data-min="60">60m</button>
+  <div id="fpBody">
+    <ul class="fp-tracks" id="fpTrackList"></ul>
+    <div class="fp-embed">
+      <iframe id="fpIframe"
+        src="https://bandcamp.com/EmbeddedPlayer/album=2980663313/size=small/bgcol=0C0A08/linkcol=C8923A/transparent=true/"
+        seamless loading="lazy"></iframe>
+    </div>
+    <div class="fp-sleep" id="fpSleepPanel" style="display:none">
+      <div class="fp-sleep-row">
+        <span class="fp-sleep-lbl">Sleep</span>
+        <button class="fp-sleep-opt" data-min="15">15m</button>
+        <button class="fp-sleep-opt" data-min="30">30m</button>
+        <button class="fp-sleep-opt" data-min="45">45m</button>
+        <button class="fp-sleep-opt" data-min="60">60m</button>
       </div>
-      <div class="sleep-countdown" id="sleepCountdown"></div>
+      <div class="fp-countdown" id="fpCountdown" style="display:none"></div>
     </div>
   </div>
 </div>
@@ -558,7 +595,7 @@
     <div class="nav-links">
       <a href="#about">About</a>
       <a href="#album">Album</a>
-      <a href="#player">Listen</a>
+      <a href="#" id="navListen">Listen</a>
       <a href="#platforms" class="nav-listen">All Platforms</a>
     </div>
     <button class="nav-burger" id="burger" aria-label="Menu">
@@ -570,7 +607,7 @@
 <div class="mobile-menu" id="mobileMenu">
   <a href="#about" class="mob-link">About</a>
   <a href="#album" class="mob-link">Album</a>
-  <a href="#player" class="mob-link">Listen</a>
+  <a href="#" class="mob-link" id="mobListen">Listen</a>
   <a href="#platforms" class="mob-link">Platforms</a>
 </div>
 
@@ -586,7 +623,7 @@
     <h1 class="fade-in delay-1">SereneNC</h1>
     <p class="hero-tagline fade-in delay-2">The golden hour, indoors.</p>
     <div class="hero-actions fade-in delay-3">
-      <a href="#player" class="btn-primary">▶ Still Pages — Listen Now</a>
+      <a href="#" class="btn-primary" id="heroCta">▶ Still Pages — Listen Now</a>
       <a href="#platforms" class="btn-secondary">All Platforms</a>
     </div>
     <div class="fade-in delay-4" style="margin-top:1.4rem">
@@ -698,26 +735,6 @@
   </div>
 </section>
 
-<!-- PLAYER -->
-<section id="player">
-  <div class="section-wrap">
-    <p class="section-label fade-in">Stream</p>
-    <h2 class="fade-in delay-1">Play the Album</h2>
-    <div class="player-wrap fade-in delay-2">
-      <iframe
-        src="https://bandcamp.com/EmbeddedPlayer/album=2980663313/size=large/bgcol=0C0A08/linkcol=C8923A/tracklist=true/artwork=small/transparent=true/"
-        seamless loading="lazy"
-      ></iframe>
-      <div class="player-note">
-        <span>Free streaming · Pay what you want</span>
-        <div style="display:flex;align-items:center;gap:.8rem">
-          <span class="player-badge"><span class="pulse"></span> Now available</span>
-          <a href="https://serenenc.bandcamp.com/album/still-page" target="_blank" rel="noopener">Open on Bandcamp ↗</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- PLATFORMS -->
 <section id="platforms">
@@ -791,7 +808,7 @@
     <div class="footer-col">
       <div class="footer-col-title">Music</div>
       <a href="#album">Still Pages (2025)</a>
-      <a href="#player">Listen now</a>
+      <a href="#" class="fp-open-link">Listen now</a>
       <a href="https://serenenc.bandcamp.com/album/still-page" target="_blank" rel="noopener">Bandcamp</a>
     </div>
     <div class="footer-col">
@@ -841,62 +858,145 @@
     setTimeout(() => el.classList.add('visible'), 100);
   });
 
-  // ── Mini player
-  const miniToggle = document.getElementById('miniToggle');
-  const miniBody   = document.getElementById('miniBody');
-  miniToggle.addEventListener('click', () => {
-    const collapsed = miniBody.style.display === 'none';
-    miniBody.style.display = collapsed ? 'block' : 'none';
-    miniToggle.textContent = collapsed ? '−' : '+';
+  // ── Floating Player ──────────────────────────────────────────
+  const ALBUMS = {
+    '2980663313': {
+      title: 'Still Pages', year: '2025',
+      tracks: [
+        { name: 'Amber Window',     dur: '7:00' },
+        { name: 'Slow Hours',       dur: '6:00' },
+        { name: 'The Reading Room', dur: '6:46' },
+        { name: 'Soft Rain Study',  dur: '5:56' },
+        { name: 'Goodnight Pages',  dur: '6:42' },
+      ]
+    }
+  };
+
+  const embedUrl = (id, t) =>
+    `https://bandcamp.com/EmbeddedPlayer/album=${id}/size=small/bgcol=0C0A08/linkcol=C8923A/transparent=true/${t ? 't='+t+'/' : ''}`;
+
+  let currentAlbum = '2980663313';
+  let currentTrack = null;
+  let ratings = JSON.parse(localStorage.getItem('serene_ratings') || '{}');
+
+  const fpIframe    = document.getElementById('fpIframe');
+  const fpTrackList = document.getElementById('fpTrackList');
+  const fp          = document.getElementById('floatPlayer');
+  const fpBody      = document.getElementById('fpBody');
+  const fpToggle    = document.getElementById('fpToggle');
+
+  function renderTracks(albumId) {
+    const album = ALBUMS[albumId];
+    fpTrackList.innerHTML = '';
+    album.tracks.forEach((t, i) => {
+      const rk = albumId + '_' + i;
+      const rating = ratings[rk] || 0;
+      const stars = [1,2,3,4,5].map(v =>
+        `<span class="fp-star${rating >= v ? ' on' : ''}" data-val="${v}">★</span>`
+      ).join('');
+      const li = document.createElement('li');
+      li.className = 'fp-track' + (currentTrack === i ? ' playing' : '');
+      li.innerHTML = `
+        <span class="fp-num">${String(i+1).padStart(2,'0')}</span>
+        <div class="fp-info">
+          <span class="fp-name">${t.name}</span>
+          <span class="fp-dur">${t.dur}</span>
+        </div>
+        <div class="fp-stars" data-track="${i}">${stars}</div>`;
+
+      li.addEventListener('click', e => {
+        if (e.target.classList.contains('fp-star')) return;
+        currentTrack = i;
+        fpIframe.src = embedUrl(currentAlbum, i + 1);
+        document.querySelectorAll('.fp-track').forEach(el => el.classList.remove('playing'));
+        li.classList.add('playing');
+        if (fpBody.style.display === 'none') {
+          fpBody.style.display = 'block'; fpToggle.textContent = '−';
+        }
+      });
+
+      li.querySelectorAll('.fp-star').forEach(star => {
+        star.addEventListener('click', e => {
+          e.stopPropagation();
+          const val = parseInt(star.dataset.val);
+          ratings[rk] = ratings[rk] === val ? 0 : val;
+          localStorage.setItem('serene_ratings', JSON.stringify(ratings));
+          renderTracks(currentAlbum);
+        });
+      });
+
+      fpTrackList.appendChild(li);
+    });
+  }
+
+  renderTracks(currentAlbum);
+
+  document.getElementById('fpAlbumSelect').addEventListener('change', e => {
+    currentAlbum = e.target.value; currentTrack = null;
+    fpIframe.src = embedUrl(currentAlbum, null);
+    renderTracks(currentAlbum);
   });
+
+  fpToggle.addEventListener('click', () => {
+    const hidden = fpBody.style.display === 'none';
+    fpBody.style.display = hidden ? 'block' : 'none';
+    fpToggle.textContent = hidden ? '−' : '+';
+  });
+
+  // Open player from Listen links
+  function openPlayer(e) {
+    e.preventDefault();
+    if (fpBody.style.display === 'none') {
+      fpBody.style.display = 'block'; fpToggle.textContent = '−';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  ['navListen','mobListen','heroCta'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', openPlayer);
+  });
+  document.querySelectorAll('.fp-open-link').forEach(el => el.addEventListener('click', openPlayer));
 
   // ── Sleep timer
-  const sleepBtn       = document.getElementById('sleepBtn');
-  const sleepPanel     = document.getElementById('sleepPanel');
-  const sleepCountdown = document.getElementById('sleepCountdown');
-  const miniIframe     = document.getElementById('miniIframe');
-  const miniPlayer     = document.getElementById('miniPlayer');
-  let sleepTimeout = null, sleepInterval = null;
+  const fpSleepBtn   = document.getElementById('fpSleepBtn');
+  const fpSleepPanel = document.getElementById('fpSleepPanel');
+  const fpCountdown  = document.getElementById('fpCountdown');
+  let fpSleepTimeout = null, fpSleepInterval = null;
 
-  sleepBtn.addEventListener('click', () => {
-    sleepPanel.classList.toggle('open');
-    sleepBtn.classList.toggle('active');
+  fpSleepBtn.addEventListener('click', () => {
+    const open = fpSleepPanel.style.display !== 'none';
+    fpSleepPanel.style.display = open ? 'none' : 'block';
+    fpSleepBtn.classList.toggle('active', !open);
   });
 
-  document.querySelectorAll('.sleep-opt').forEach(btn => {
+  document.querySelectorAll('.fp-sleep-opt').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.sleep-opt').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.fp-sleep-opt').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      const ms = parseInt(btn.dataset.min) * 60 * 1000;
+      const ms = parseInt(btn.dataset.min) * 60000;
       const end = Date.now() + ms;
-
-      clearTimeout(sleepTimeout);
-      clearInterval(sleepInterval);
-      miniPlayer.classList.remove('fading');
-      sleepCountdown.style.display = 'block';
-
-      sleepInterval = setInterval(() => {
+      clearTimeout(fpSleepTimeout); clearInterval(fpSleepInterval);
+      fp.classList.remove('fp-fading');
+      fpCountdown.style.display = 'block';
+      fpSleepInterval = setInterval(() => {
         const left = end - Date.now();
-        if (left <= 0) { clearInterval(sleepInterval); return; }
+        if (left <= 0) { clearInterval(fpSleepInterval); return; }
         const m = Math.floor(left / 60000);
         const s = Math.floor((left % 60000) / 1000);
-        sleepCountdown.textContent = `Stops in ${m}:${s.toString().padStart(2,'0')}`;
+        fpCountdown.textContent = `Stops in ${m}:${s.toString().padStart(2,'0')}`;
       }, 1000);
-
-      // Fade starts 30s before end
-      sleepTimeout = setTimeout(() => {
-        miniPlayer.classList.add('fading');
+      fpSleepTimeout = setTimeout(() => {
+        fp.classList.add('fp-fading');
         setTimeout(() => {
-          clearInterval(sleepInterval);
-          miniIframe.src = '';
-          miniPlayer.classList.remove('fading');
-          miniPlayer.style.opacity = '1';
-          sleepCountdown.innerHTML = '<span class="sleep-stopped">Music stopped ·  <button style="background:none;border:none;color:var(--amber-d);cursor:pointer;font-size:.68rem" id="restartBtn">Restart</button></span>';
-          document.getElementById('restartBtn').addEventListener('click', () => {
-            miniIframe.src = 'https://bandcamp.com/EmbeddedPlayer/album=2980663313/size=small/bgcol=0C0A08/linkcol=C8923A/transparent=true/';
-            sleepCountdown.style.display = 'none';
-            document.querySelectorAll('.sleep-opt').forEach(b => b.classList.remove('active'));
-          });
+          clearInterval(fpSleepInterval);
+          fpIframe.src = '';
+          fp.classList.remove('fp-fading'); fp.style.opacity = '1';
+          fpCountdown.innerHTML = 'Stopped · <button id="fpRestart" style="background:none;border:none;color:var(--amber-d);cursor:pointer;font-size:.68rem">Restart</button>';
+          document.getElementById('fpRestart').onclick = () => {
+            fpIframe.src = embedUrl(currentAlbum, currentTrack != null ? currentTrack + 1 : null);
+            fpCountdown.style.display = 'none';
+            document.querySelectorAll('.fp-sleep-opt').forEach(b => b.classList.remove('active'));
+          };
         }, 30000);
       }, Math.max(0, ms - 30000));
     });
