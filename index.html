@@ -448,6 +448,62 @@
       font-size: .7rem; color: var(--muted);
     }
 
+    /* ── MINI PLAYER ────────────────────────────────────────────── */
+    .mini-player {
+      position: fixed; top: calc(var(--nav-h) + 1rem); right: 1.5rem;
+      z-index: 150; width: 272px;
+      background: rgba(12,10,8,.97);
+      border: 1px solid var(--border2);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 8px 32px rgba(0,0,0,.45);
+      transition: opacity .3s;
+    }
+    .mini-player.fading { animation: sleep-fade 30s forwards; }
+    @keyframes sleep-fade { 0% { opacity:1; } 100% { opacity:0; } }
+    .mini-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: .45rem .75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .mini-title {
+      font-size: .62rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--amber-d); display: flex; align-items: center; gap: .4rem;
+    }
+    .mini-actions { display: flex; gap: .2rem; align-items: center; }
+    .mini-btn {
+      background: none; border: none; color: var(--muted);
+      cursor: pointer; font-size: .85rem; padding: .1rem .35rem;
+      transition: color .2s; line-height: 1;
+    }
+    .mini-btn:hover { color: var(--text); }
+    .mini-btn.active { color: var(--amber); }
+    #miniBody { display: block; }
+    .mini-player iframe { display: block; width: 100%; height: 42px; border: none; }
+    .sleep-panel {
+      display: none;
+      padding: .55rem .75rem;
+      border-top: 1px solid var(--border);
+      background: var(--bg2);
+    }
+    .sleep-panel.open { display: block; }
+    .sleep-row { display: flex; gap: .35rem; align-items: center; margin-bottom: .4rem; }
+    .sleep-lbl { font-size: .62rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); flex-shrink: 0; }
+    .sleep-opt {
+      flex: 1; padding: .28rem 0;
+      background: var(--bg3); border: 1px solid var(--border);
+      color: var(--text2); font-size: .68rem; cursor: pointer;
+      transition: background .2s, color .2s; text-align: center;
+    }
+    .sleep-opt:hover { background: var(--border2); color: var(--text); }
+    .sleep-opt.active { background: var(--amber-d); color: var(--bg); border-color: var(--amber-d); }
+    .sleep-countdown {
+      font-size: .68rem; color: var(--amber-d);
+      font-family: 'Cormorant Garamond', serif; letter-spacing: .08em;
+      display: none;
+    }
+    .sleep-stopped { color: var(--muted); font-style: italic; }
+    @media (max-width: 600px) { .mini-player { display: none; } }
+
     /* ── RESPONSIVE ─────────────────────────────────────────────── */
     @media (max-width: 768px) {
       .nav-links { display: none; }
@@ -468,6 +524,32 @@
   </style>
 </head>
 <body>
+
+<!-- MINI PLAYER -->
+<div class="mini-player" id="miniPlayer">
+  <div class="mini-header">
+    <span class="mini-title"><span class="pulse"></span> Still Pages</span>
+    <div class="mini-actions">
+      <button class="mini-btn" id="sleepBtn" title="Sleep timer">⏾</button>
+      <button class="mini-btn" id="miniToggle" title="Minimize">−</button>
+    </div>
+  </div>
+  <div id="miniBody">
+    <iframe id="miniIframe"
+      src="https://bandcamp.com/EmbeddedPlayer/album=2980663313/size=small/bgcol=0C0A08/linkcol=C8923A/transparent=true/"
+      seamless loading="lazy"></iframe>
+    <div class="sleep-panel" id="sleepPanel">
+      <div class="sleep-row">
+        <span class="sleep-lbl">Sleep</span>
+        <button class="sleep-opt" data-min="15">15m</button>
+        <button class="sleep-opt" data-min="30">30m</button>
+        <button class="sleep-opt" data-min="45">45m</button>
+        <button class="sleep-opt" data-min="60">60m</button>
+      </div>
+      <div class="sleep-countdown" id="sleepCountdown"></div>
+    </div>
+  </div>
+</div>
 
 <!-- NAV -->
 <nav id="nav">
@@ -757,6 +839,67 @@
   // ── Hero elements auto-visible
   document.querySelectorAll('#hero .fade-in').forEach(el => {
     setTimeout(() => el.classList.add('visible'), 100);
+  });
+
+  // ── Mini player
+  const miniToggle = document.getElementById('miniToggle');
+  const miniBody   = document.getElementById('miniBody');
+  miniToggle.addEventListener('click', () => {
+    const collapsed = miniBody.style.display === 'none';
+    miniBody.style.display = collapsed ? 'block' : 'none';
+    miniToggle.textContent = collapsed ? '−' : '+';
+  });
+
+  // ── Sleep timer
+  const sleepBtn       = document.getElementById('sleepBtn');
+  const sleepPanel     = document.getElementById('sleepPanel');
+  const sleepCountdown = document.getElementById('sleepCountdown');
+  const miniIframe     = document.getElementById('miniIframe');
+  const miniPlayer     = document.getElementById('miniPlayer');
+  let sleepTimeout = null, sleepInterval = null;
+
+  sleepBtn.addEventListener('click', () => {
+    sleepPanel.classList.toggle('open');
+    sleepBtn.classList.toggle('active');
+  });
+
+  document.querySelectorAll('.sleep-opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.sleep-opt').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const ms = parseInt(btn.dataset.min) * 60 * 1000;
+      const end = Date.now() + ms;
+
+      clearTimeout(sleepTimeout);
+      clearInterval(sleepInterval);
+      miniPlayer.classList.remove('fading');
+      sleepCountdown.style.display = 'block';
+
+      sleepInterval = setInterval(() => {
+        const left = end - Date.now();
+        if (left <= 0) { clearInterval(sleepInterval); return; }
+        const m = Math.floor(left / 60000);
+        const s = Math.floor((left % 60000) / 1000);
+        sleepCountdown.textContent = `Stops in ${m}:${s.toString().padStart(2,'0')}`;
+      }, 1000);
+
+      // Fade starts 30s before end
+      sleepTimeout = setTimeout(() => {
+        miniPlayer.classList.add('fading');
+        setTimeout(() => {
+          clearInterval(sleepInterval);
+          miniIframe.src = '';
+          miniPlayer.classList.remove('fading');
+          miniPlayer.style.opacity = '1';
+          sleepCountdown.innerHTML = '<span class="sleep-stopped">Music stopped ·  <button style="background:none;border:none;color:var(--amber-d);cursor:pointer;font-size:.68rem" id="restartBtn">Restart</button></span>';
+          document.getElementById('restartBtn').addEventListener('click', () => {
+            miniIframe.src = 'https://bandcamp.com/EmbeddedPlayer/album=2980663313/size=small/bgcol=0C0A08/linkcol=C8923A/transparent=true/';
+            sleepCountdown.style.display = 'none';
+            document.querySelectorAll('.sleep-opt').forEach(b => b.classList.remove('active'));
+          });
+        }, 30000);
+      }, Math.max(0, ms - 30000));
+    });
   });
 </script>
 </body>
