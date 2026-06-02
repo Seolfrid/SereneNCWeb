@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SERENE — Still Pages</title>
+  <meta name="description" content="Ambient lo-fi music for the golden hour, indoors. Warm textures, slow drones, rain against glass. Five tracks for the evenings.">
+  <meta name="theme-color" content="#0C0A08">
+  <meta property="og:title" content="SERENE — Still Pages">
+  <meta property="og:description" content="Ambient lo-fi for the golden hour, indoors.">
+  <meta property="og:image" content="cover.jpg">
+  <meta property="og:type" content="music.album">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── RESET & BASE ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0C0A08;
+      --bg2:      #110E0A;
+      --bg3:      #161209;
+      --amber:    #C8923A;
+      --amber-l:  #E0A84A;
+      --amber-d:  #8A5E1E;
+      --amber-xs: rgba(200,146,58,.06);
+      --text:     #D4C4A8;
+      --text2:    #A09070;
+      --muted:    #5C5040;
+      --border:   #1E1A12;
+      --border2:  #2A2418;
+      --radius:   2px;
+      --nav-h:    64px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 15px;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    ::selection { background: var(--amber-d); color: var(--bg); }
+
+    a { color: inherit; text-decoration: none; }
+
+    img { display: block; max-width: 100%; }
+
+    /* ── SCROLLBAR ─────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 2px; }
+
+    /* ── NAV ───────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      height: var(--nav-h);
+      display: flex; align-items: center;
+      padding: 0 2.5rem;
+      transition: background .4s, border-color .4s;
+    }
+    nav.scrolled {
+      background: rgba(12,10,8,.96);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+    .nav-inner {
+      width: 100%; max-width: 1000px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--amber);
+      font-weight: 400;
+    }
+    .nav-logo span { color: var(--muted); font-weight: 300; }
+    .nav-links {
+      display: flex; align-items: center; gap: 2.5rem;
+    }
+    .nav-links a {
+      color: var(--muted);
+      font-size: .75rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      transition: color .25s;
+      position: relative;
+      padding-bottom: 2px;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: -2px; left: 0; right: 100%;
+      height: 1px; background: var(--amber);
+      transition: right .3s ease;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { right: 0; }
+    .nav-listen {
+      padding: .4rem 1.1rem;
+      border: 1px solid var(--amber-d);
+      color: var(--amber) !important;
+      font-size: .72rem !important;
+      letter-spacing: .15em !important;
+      transition: background .25s, color .25s !important;
+    }
+    .nav-listen:hover { background: var(--amber-d); color: var(--bg) !important; }
+    .nav-listen::after { display: none !important; }
+
+    /* ── SUPPORT LINK ─────────────────────────────────────────── */
+    .support-link {
+      font-size: .7rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--muted); border-bottom: 1px solid var(--border2);
+      transition: color .25s, border-color .25s;
+      padding-bottom: 2px;
+    }
+    .support-link:hover { color: var(--amber); border-color: var(--amber-d); }
+
+    /* Mobile burger */
+    .nav-burger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: .5rem; background: none; border: none;
+    }
+    .nav-burger span {
+      display: block; width: 22px; height: 1px;
+      background: var(--text2); transition: transform .3s, opacity .3s;
+    }
+    .nav-burger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .nav-burger.open span:nth-child(2) { opacity: 0; }
+    .nav-burger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none; position: fixed;
+      top: var(--nav-h); left: 0; right: 0; bottom: 0;
+      background: rgba(12,10,8,.98);
+      z-index: 190; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2.5rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem; font-weight: 300;
+      letter-spacing: .2em; text-transform: uppercase;
+      color: var(--text2); transition: color .25s;
+    }
+    .mobile-menu a:hover { color: var(--amber); }
+
+    /* ── HERO ──────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      text-align: center;
+      padding: calc(var(--nav-h) + 4rem) 2rem 5rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 60%, rgba(200,146,58,.055) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 30% 80%, rgba(200,146,58,.03) 0%, transparent 60%);
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: .6rem;
+      font-size: .68rem; letter-spacing: .35em; text-transform: uppercase;
+      color: var(--amber-d); margin-bottom: 1.8rem;
+    }
+    .hero-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--amber-d); }
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4rem, 12vw, 8.5rem);
+      font-weight: 300; letter-spacing: .12em;
+      text-transform: uppercase; line-height: .95;
+      color: var(--text); margin-bottom: 1.2rem;
+    }
+    .hero-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-weight: 300;
+      font-size: clamp(1rem, 2.5vw, 1.45rem);
+      color: var(--muted); margin-bottom: 3rem;
+      letter-spacing: .04em;
+    }
+    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      padding: .7rem 2rem;
+      background: var(--amber-d);
+      color: var(--bg);
+      font-size: .75rem; letter-spacing: .2em; text-transform: uppercase;
+      font-weight: 500; transition: background .25s;
+    }
+    .btn-primary:hover { background: var(--amber); }
+    .btn-secondary {
+      padding: .7rem 2rem;
+      border: 1px solid var(--border2);
+      color: var(--text2);
+      font-size: .75rem; letter-spacing: .2em; text-transform: uppercase;
+      transition: border-color .25s, color .25s;
+    }
+    .btn-secondary:hover { border-color: var(--muted); color: var(--text); }
+    .scroll-indicator {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+    }
+    .scroll-indicator span {
+      font-size: .62rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--muted); animation: scroll-pulse 2.5s ease infinite;
+    }
+    .scroll-line {
+      width: 1px; height: 48px;
+      background: linear-gradient(to bottom, var(--muted) 0%, transparent 100%);
+      animation: scroll-pulse 2.5s ease infinite;
+    }
+    @keyframes scroll-pulse {
+      0%,100% { opacity: .25; transform: translateY(0); }
+      50% { opacity: .7; transform: translateY(5px); }
+    }
+
+    /* ── FADE-IN ANIMATIONS ────────────────────────────────────── */
+    .fade-in {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .fade-in.delay-1 { transition-delay: .1s; }
+    .fade-in.delay-2 { transition-delay: .2s; }
+    .fade-in.delay-3 { transition-delay: .3s; }
+    .fade-in.delay-4 { transition-delay: .4s; }
+
+    /* ── SECTIONS ──────────────────────────────────────────────── */
+    .section-wrap {
+      max-width: 920px; margin: 0 auto;
+      padding: 7rem 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .section-label {
+      font-size: .68rem; letter-spacing: .3em; text-transform: uppercase;
+      color: var(--amber-d); margin-bottom: 1rem;
+      display: flex; align-items: center; gap: .6rem;
+    }
+    .section-label::before {
+      content: ''; display: block;
+      width: 24px; height: 1px; background: var(--amber-d);
+    }
+    h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 300; line-height: 1.15;
+      color: var(--text); margin-bottom: 1.5rem;
+    }
+
+    /* ── ABOUT ─────────────────────────────────────────────────── */
+    #about .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start;
+    }
+    .about-text p { color: var(--text2); margin-bottom: 1rem; font-size: .94rem; }
+    .about-text p:last-child { color: var(--muted); font-size: .83rem; }
+    .about-stats {
+      display: flex; flex-direction: column; gap: 1.5rem; padding-top: .5rem;
+    }
+    .stat {
+      padding: 1.2rem 1.5rem;
+      border: 1px solid var(--border);
+      background: var(--bg2);
+    }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem; font-weight: 300;
+      color: var(--amber); line-height: 1;
+      margin-bottom: .2rem;
+    }
+    .stat-label { font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+
+    /* ── ALBUM ─────────────────────────────────────────────────── */
+    #album .album-layout {
+      display: grid; grid-template-columns: 320px 1fr; gap: 4rem; align-items: start;
+    }
+    .album-cover-wrap { position: sticky; top: calc(var(--nav-h) + 2rem); }
+    .album-cover {
+      aspect-ratio: 1; overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg2); position: relative;
+    }
+    .album-cover img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform .6s ease, opacity .4s;
+    }
+    .album-cover:hover img { transform: scale(1.02); }
+    .album-cover-placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: .8rem;
+      background: linear-gradient(135deg, #0e0b07 0%, #1c1508 50%, #0e0b07 100%);
+      color: var(--muted);
+    }
+    .album-cover-placeholder .cover-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; letter-spacing: .25em; text-transform: uppercase;
+    }
+    .album-cover-placeholder .cover-sub { font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; }
+    .album-meta { margin: 1rem 0; }
+    .album-title-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 400; letter-spacing: .08em;
+      color: var(--text);
+    }
+    .album-year-text { font-size: .72rem; letter-spacing: .2em; color: var(--amber-d); text-transform: uppercase; margin-bottom: .3rem; }
+
+    .track-list { list-style: none; margin-top: 1.5rem; }
+    .track-item {
+      display: grid; grid-template-columns: 2rem 1fr auto;
+      align-items: center; gap: .8rem;
+      padding: .9rem 0;
+      border-bottom: 1px solid var(--border);
+      transition: background .2s;
+      cursor: default;
+    }
+    .track-item:last-child { border-bottom: none; }
+    .track-item:hover .track-name-text { color: var(--amber); }
+    .track-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: .8rem; color: var(--amber-d); text-align: right;
+    }
+    .track-info { display: flex; flex-direction: column; gap: .1rem; }
+    .track-name-text { font-size: .9rem; color: var(--text2); transition: color .25s; }
+    .track-desc { font-size: .72rem; color: var(--muted); font-style: italic; }
+    .track-dur { font-size: .72rem; color: var(--muted); font-family: 'Cormorant Garamond', serif; }
+    .album-actions { display: flex; gap: .8rem; margin-top: 1.8rem; flex-wrap: wrap; }
+
+    /* ── PLAYER ─────────────────────────────────────────────────── */
+    #player { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    #player .section-wrap { border-top: none; }
+    .player-wrap {
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin-top: 2rem;
+      background: var(--bg);
+    }
+    .player-wrap iframe { display: block; width: 100%; height: 340px; border: none; }
+    .player-note {
+      padding: .9rem 1.2rem;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem;
+      font-size: .75rem; color: var(--muted);
+    }
+    .player-note a { color: var(--amber-d); border-bottom: 1px solid var(--amber-d); transition: color .2s; }
+    .player-note a:hover { color: var(--amber); border-color: var(--amber); }
+    .player-badge {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-size: .65rem; letter-spacing: .15em; text-transform: uppercase;
+      color: var(--muted); padding: .25rem .6rem; border: 1px solid var(--border);
+    }
+    .pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--amber-d); animation: pulse 2s ease infinite; }
+    @keyframes pulse { 0%,100% { opacity: .4; } 50% { opacity: 1; } }
+
+    /* ── PLATFORMS ──────────────────────────────────────────────── */
+    #platforms .platforms-intro {
+      max-width: 520px; color: var(--text2); font-size: .9rem; margin-bottom: 3rem;
+    }
+    .platforms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: .75rem;
+    }
+    .platform-card {
+      display: flex; align-items: center; gap: .9rem;
+      padding: 1rem 1.2rem;
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      color: var(--text2);
+      transition: border-color .25s, background .25s, transform .2s;
+    }
+    .platform-card:hover {
+      border-color: var(--amber-d);
+      background: var(--amber-xs);
+      transform: translateY(-2px);
+    }
+    .platform-card:hover .platform-name { color: var(--text); }
+    .platform-icon-wrap {
+      width: 36px; height: 36px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border); font-size: 1rem;
+      color: var(--amber-d);
+    }
+    .platform-name { font-size: .85rem; transition: color .25s; }
+    .platform-type { font-size: .65rem; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
+    .platform-soon { opacity: .4; pointer-events: none; }
+    .platform-soon .platform-type::after { content: ' · coming soon'; }
+
+    /* ── QUOTE ──────────────────────────────────────────────────── */
+    #quote {
+      text-align: center; padding: 7rem 2rem;
+      background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(200,146,58,.04) 0%, transparent 70%);
+    }
+    blockquote {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-weight: 300;
+      font-size: clamp(1.3rem, 3.5vw, 2rem);
+      color: var(--text2);
+      max-width: 600px; margin: 0 auto;
+      line-height: 1.6; letter-spacing: .02em;
+    }
+    blockquote cite {
+      display: block; margin-top: 1.5rem;
+      font-size: .72rem; font-style: normal;
+      letter-spacing: .25em; text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── FOOTER ─────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem 2rem;
+      background: var(--bg2);
+    }
+    .footer-inner {
+      max-width: 920px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3rem;
+    }
+    .footer-col-title {
+      font-size: .68rem; letter-spacing: .25em; text-transform: uppercase;
+      color: var(--amber-d); margin-bottom: 1rem;
+    }
+    .footer-col a, .footer-col p {
+      display: block; font-size: .8rem; color: var(--muted);
+      margin-bottom: .5rem; transition: color .2s;
+    }
+    .footer-col a:hover { color: var(--text2); }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; letter-spacing: .25em;
+      text-transform: uppercase; color: var(--amber);
+      margin-bottom: .4rem;
+    }
+    .footer-tagline { font-size: .78rem; color: var(--muted); font-style: italic; font-family: 'Cormorant Garamond', serif; }
+    .footer-bottom {
+      max-width: 920px; margin: 2.5rem auto 0;
+      padding-top: 1.5rem; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: .7rem; color: var(--muted);
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-burger { display: flex; }
+      #about .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .about-stats { flex-direction: row; }
+      #album .album-layout { grid-template-columns: 1fr; }
+      .album-cover-wrap { position: static; }
+      .album-cover { max-width: 280px; }
+      .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-bottom { flex-direction: column; gap: .5rem; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      .hero-actions { flex-direction: column; align-items: stretch; text-align: center; }
+      .about-stats { flex-direction: column; }
+      .platforms-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">Serene<span> ·</span></a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#album">Album</a>
+      <a href="#player">Listen</a>
+      <a href="#platforms" class="nav-listen">All Platforms</a>
+    </div>
+    <button class="nav-burger" id="burger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" class="mob-link">About</a>
+  <a href="#album" class="mob-link">Album</a>
+  <a href="#player" class="mob-link">Listen</a>
+  <a href="#platforms" class="mob-link">Platforms</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow fade-in">
+      <span class="hero-dot"></span>
+      Ambient · Lo-fi · Deep Ambient
+      <span class="hero-dot"></span>
+    </div>
+    <h1 class="fade-in delay-1">Serene</h1>
+    <p class="hero-tagline fade-in delay-2">The golden hour, indoors.</p>
+    <div class="hero-actions fade-in delay-3">
+      <a href="#player" class="btn-primary">▶ Still Pages — Listen Now</a>
+      <a href="#platforms" class="btn-secondary">All Platforms</a>
+    </div>
+    <div class="fade-in delay-4" style="margin-top:1.4rem">
+      <a href="https://paypal.me/BaptisteDELEVOY" target="_blank" rel="noopener" class="support-link">♥ Support the project</a>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-wrap">
+    <p class="section-label fade-in">About</p>
+    <div class="about-grid">
+      <div class="about-text fade-in delay-1">
+        <h2>Sound that holds<br><em>space without filling it.</em></h2>
+        <p>Serene is ambient lo-fi built around one idea: the golden hour, indoors. The amber of a lamp after dusk — the quiet that settles when the day finally exhales.</p>
+        <p>Warm textures, slow drones, rain against glass. Made for evenings when you need background music that disappears into the room — studying, reading, winding down.</p>
+        <p>Free to stream everywhere. If it becomes part of your evenings, consider <a href="https://serenenc.bandcamp.com/album/still-page" target="_blank" rel="noopener" style="color:var(--amber-d);border-bottom:1px solid var(--amber-d)">supporting on Bandcamp</a> or <a href="https://paypal.me/BaptisteDELEVOY" target="_blank" rel="noopener" style="color:var(--amber-d);border-bottom:1px solid var(--amber-d)">via PayPal</a>.</p>
+      </div>
+      <div class="about-stats fade-in delay-2">
+        <div class="stat">
+          <div class="stat-num">5</div>
+          <div class="stat-label">Tracks on Still Pages</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">35<span style="font-size:1.2rem">min</span></div>
+          <div class="stat-label">Total runtime</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Free to stream</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ALBUM -->
+<section id="album">
+  <div class="section-wrap">
+    <p class="section-label fade-in">Debut Album — 2025</p>
+    <div class="album-layout">
+      <div class="album-cover-wrap fade-in delay-1">
+        <div class="album-cover">
+          <img src="cover.jpg" alt="Still Pages — Serene"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="album-cover-placeholder" style="display:none">
+            <div class="cover-title">Still Pages</div>
+            <div class="cover-sub">Serene · 2025</div>
+          </div>
+        </div>
+        <div class="album-meta" style="margin-top:1rem">
+          <div class="album-year-text">2025 · 5 tracks · ~35 min</div>
+          <div class="album-title-text">Still Pages</div>
+        </div>
+        <div class="album-actions">
+          <a href="https://serenenc.bandcamp.com/album/still-page" target="_blank" rel="noopener" class="btn-primary" style="flex:1;text-align:center;font-size:.72rem">Buy on Bandcamp</a>
+          <a href="https://www.youtube.com/@SereneNC" target="_blank" rel="noopener" class="btn-secondary" style="font-size:.72rem">YouTube</a>
+        </div>
+      </div>
+      <div class="fade-in delay-2">
+        <ul class="track-list">
+          <li class="track-item">
+            <span class="track-num">01</span>
+            <div class="track-info">
+              <span class="track-name-text">Amber Window</span>
+              <span class="track-desc">The first exhale of the evening</span>
+            </div>
+            <span class="track-dur">7:00</span>
+          </li>
+          <li class="track-item">
+            <span class="track-num">02</span>
+            <div class="track-info">
+              <span class="track-name-text">Slow Hours</span>
+              <span class="track-desc">Warm cup, no waiting</span>
+            </div>
+            <span class="track-dur">7:00</span>
+          </li>
+          <li class="track-item">
+            <span class="track-num">03</span>
+            <div class="track-info">
+              <span class="track-name-text">The Reading Room</span>
+              <span class="track-desc">Lose track of time</span>
+            </div>
+            <span class="track-dur">7:00</span>
+          </li>
+          <li class="track-item">
+            <span class="track-num">04</span>
+            <div class="track-info">
+              <span class="track-name-text">Soft Rain Study</span>
+              <span class="track-desc">Rain builds a perfect bubble</span>
+            </div>
+            <span class="track-dur">7:00</span>
+          </li>
+          <li class="track-item">
+            <span class="track-num">05</span>
+            <div class="track-info">
+              <span class="track-name-text">Goodnight Pages</span>
+              <span class="track-desc">Close the book, turn off the lamp</span>
+            </div>
+            <span class="track-dur">7:00</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLAYER -->
+<section id="player">
+  <div class="section-wrap">
+    <p class="section-label fade-in">Stream</p>
+    <h2 class="fade-in delay-1">Play the Album</h2>
+    <div class="player-wrap fade-in delay-2">
+      <iframe
+        src="https://bandcamp.com/EmbeddedPlayer/album=2980663313/size=large/bgcol=0C0A08/linkcol=C8923A/tracklist=true/artwork=small/transparent=true/"
+        seamless loading="lazy"
+      ></iframe>
+      <div class="player-note">
+        <span>Free streaming · Pay what you want</span>
+        <div style="display:flex;align-items:center;gap:.8rem">
+          <span class="player-badge"><span class="pulse"></span> Now available</span>
+          <a href="https://serenenc.bandcamp.com/album/still-page" target="_blank" rel="noopener">Open on Bandcamp ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORMS -->
+<section id="platforms">
+  <div class="section-wrap">
+    <p class="section-label fade-in">Listen Everywhere</p>
+    <h2 class="fade-in delay-1">Available On</h2>
+    <p class="platforms-intro fade-in delay-2">Free to stream on all platforms. Support the project directly on Bandcamp.</p>
+    <div class="platforms-grid fade-in delay-3">
+      <a href="https://serenenc.bandcamp.com/album/still-page" target="_blank" rel="noopener" class="platform-card">
+        <div class="platform-icon-wrap">◈</div>
+        <div>
+          <div class="platform-name">Bandcamp</div>
+          <div class="platform-type">Buy · Stream</div>
+        </div>
+      </a>
+      <a href="https://www.youtube.com/@SereneNC" target="_blank" rel="noopener" class="platform-card">
+        <div class="platform-icon-wrap">▶</div>
+        <div>
+          <div class="platform-name">YouTube</div>
+          <div class="platform-type">Free · Videos</div>
+        </div>
+      </a>
+      <a href="#" class="platform-card platform-soon">
+        <div class="platform-icon-wrap">◎</div>
+        <div>
+          <div class="platform-name">Spotify</div>
+          <div class="platform-type">Streaming</div>
+        </div>
+      </a>
+      <a href="#" class="platform-card platform-soon">
+        <div class="platform-icon-wrap">♪</div>
+        <div>
+          <div class="platform-name">Apple Music</div>
+          <div class="platform-type">Streaming</div>
+        </div>
+      </a>
+      <a href="#" class="platform-card platform-soon">
+        <div class="platform-icon-wrap">≈</div>
+        <div>
+          <div class="platform-name">Deezer</div>
+          <div class="platform-type">Streaming</div>
+        </div>
+      </a>
+      <a href="#" class="platform-card platform-soon">
+        <div class="platform-icon-wrap">〜</div>
+        <div>
+          <div class="platform-name">Tidal</div>
+          <div class="platform-type">Streaming</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section id="quote">
+  <blockquote class="fade-in">
+    "Made for the hours when you need sound<br>
+    that holds space without filling it."
+    <cite>— Still Pages, 2025</cite>
+  </blockquote>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="footer-logo">Serene</div>
+      <div class="footer-tagline">The golden hour, indoors.</div>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Music</div>
+      <a href="#album">Still Pages (2025)</a>
+      <a href="#player">Listen now</a>
+      <a href="https://serenenc.bandcamp.com/album/still-page" target="_blank" rel="noopener">Bandcamp</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Follow</div>
+      <a href="https://www.youtube.com/@SereneNC" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://serenenc.bandcamp.com" target="_blank" rel="noopener">Bandcamp</a>
+      <a href="https://paypal.me/BaptisteDELEVOY" target="_blank" rel="noopener" style="margin-top:.8rem;color:var(--amber-d)">♥ Support via PayPal</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Serene · All rights reserved</span>
+    <span>Made with intention.</span>
+  </div>
+</footer>
+
+<script>
+  // ── Nav scroll effect
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+
+  // ── Mobile menu
+  const burger = document.getElementById('burger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  burger.addEventListener('click', () => {
+    burger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+    document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+  });
+  document.querySelectorAll('.mob-link').forEach(link => {
+    link.addEventListener('click', () => {
+      burger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // ── Fade-in on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // ── Hero elements auto-visible
+  document.querySelectorAll('#hero .fade-in').forEach(el => {
+    setTimeout(() => el.classList.add('visible'), 100);
+  });
+</script>
+</body>
+</html>
