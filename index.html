@@ -531,7 +531,18 @@
       font-size: .68rem; color: var(--amber-d); margin-top: .35rem;
       font-family: 'Cormorant Garamond', serif;
     }
-    @media (max-width: 600px) { .fp { display: none; } }
+    @media (max-width: 600px) {
+      .fp {
+        top: auto;
+        bottom: 44px;
+        right: 0; left: 0;
+        width: 100%;
+        border-left: none; border-right: none; border-radius: 0;
+      }
+      #fpBody { max-height: 60vh; overflow-y: auto; }
+      .fp-track { padding: .65rem .75rem; }
+      body { padding-bottom: calc(44px + 52px); }
+    }
 
     /* ── PLATFORM BAR ────────────────────────────────────────────── */
     .platform-bar {
@@ -740,7 +751,7 @@
           <li class="track-item">
             <span class="track-num">01</span>
             <div class="track-info">
-              <span class="track-name-text">Amber Window</span>
+              <span class="track-name-text">Track 1 — Amber Window</span>
               <span class="track-desc">The first exhale of the evening</span>
             </div>
             <span class="track-dur">7:00</span>
@@ -748,7 +759,7 @@
           <li class="track-item">
             <span class="track-num">02</span>
             <div class="track-info">
-              <span class="track-name-text">Slow Hours</span>
+              <span class="track-name-text">Track 2 — Slow Hours</span>
               <span class="track-desc">Warm cup, no waiting</span>
             </div>
             <span class="track-dur">7:00</span>
@@ -756,7 +767,7 @@
           <li class="track-item">
             <span class="track-num">03</span>
             <div class="track-info">
-              <span class="track-name-text">The Reading Room</span>
+              <span class="track-name-text">Track 3 — The Reading Room</span>
               <span class="track-desc">Lose track of time</span>
             </div>
             <span class="track-dur">7:00</span>
@@ -764,7 +775,7 @@
           <li class="track-item">
             <span class="track-num">04</span>
             <div class="track-info">
-              <span class="track-name-text">Soft Rain Study</span>
+              <span class="track-name-text">Track 4 — Soft Rain Study</span>
               <span class="track-desc">Rain builds a perfect bubble</span>
             </div>
             <span class="track-dur">7:00</span>
@@ -772,7 +783,7 @@
           <li class="track-item">
             <span class="track-num">05</span>
             <div class="track-info">
-              <span class="track-name-text">Goodnight Pages</span>
+              <span class="track-name-text">Track 5 — Goodnight Pages</span>
               <span class="track-desc">Close the book, turn off the lamp</span>
             </div>
             <span class="track-dur">7:00</span>
@@ -912,11 +923,11 @@
     '2980663313': {
       title: 'Still Pages', year: '2025',
       tracks: [
-        { name: 'Amber Window',     dur: '7:00' },
-        { name: 'Slow Hours',       dur: '6:00' },
-        { name: 'The Reading Room', dur: '6:46' },
-        { name: 'Soft Rain Study',  dur: '5:56' },
-        { name: 'Goodnight Pages',  dur: '6:42' },
+        { name: 'Track 1 — Amber Window',     dur: '7:00' },
+        { name: 'Track 2 — Slow Hours',       dur: '6:00' },
+        { name: 'Track 3 — The Reading Room', dur: '6:46' },
+        { name: 'Track 4 — Soft Rain Study',  dur: '5:56' },
+        { name: 'Track 5 — Goodnight Pages',  dur: '6:42' },
       ]
     }
   };
